@@ -1,0 +1,601 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chachar Math Game 🌸</title>
+    <link href="https://fonts.googleapis.com/css2?family=Mitr:wght=300;400;500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-color: #ffeef2;
+            --panel-bg: #ffffff;
+            --primary-pink: #ff8fa3;
+            --accent-btn: #00cba9;
+            --stop-btn: #ff4d6d;
+            --text-dark: #4a4a4a;
+        }
+
+        * {
+            box-sizing: border-box;
+            font-family: 'Mitr', sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+            position: relative;
+        }
+
+        /* --- 🌸 อนิเมชันกลีบดอกไม้พริ้วไหวอัตโนมัติ --- */
+        .effect-container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .petal {
+            position: absolute;
+            opacity: 0;
+            animation: floatAndSpin linear infinite;
+        }
+
+        @keyframes floatAndSpin {
+            0% {
+                transform: translateY(-20px) translateX(0) rotate(0deg);
+                opacity: 0;
+            }
+            10% {
+                opacity: 0.8;
+            }
+            50% {
+                transform: translateY(50vh) translateX(40px) rotate(180deg);
+            }
+            100% {
+                transform: translateY(105vh) translateX(-10px) rotate(360deg);
+                opacity: 0;
+            }
+        }
+
+        /* --- Main Layout --- */
+        .app-container {
+            display: flex;
+            gap: 24px;
+            width: 90%;
+            max-width: 1100px;
+            height: 85vh;
+            z-index: 2;
+        }
+
+        .panel {
+            background: var(--panel-bg);
+            border-radius: 24px;
+            padding: 24px;
+            box-shadow: 0 8px 24px rgba(255, 143, 163, 0.15);
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* --- Left Panel (Game Area) --- */
+        .left-panel {
+            flex: 1.2;
+            align-items: center;
+            position: relative;
+        }
+
+        .game-header {
+            text-align: center;
+            color: #d9406b;
+            margin-bottom: 16px;
+            font-size: 1.6rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .screen-box {
+            width: 100%;
+            flex: 1;
+            border: 3px solid #ffccd5;
+            border-radius: 20px;
+            background: #fffcfd;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+            margin-bottom: 16px;
+            padding: 20px;
+            text-align: center;
+        }
+
+        /* --- 🐻 อนิเมชันน้องหมีดุ๊กดิ๊กขยับดึ๋งๆ --- */
+        .bear-icon {
+            font-size: 4rem;
+            margin-bottom: 10px;
+            display: inline-block;
+            animation: bearBounce 2.5s ease-in-out infinite;
+        }
+
+        @keyframes bearBounce {
+            0%, 100% {
+                transform: translateY(0) scale(1);
+            }
+            50% {
+                transform: translateY(-6px) scale(1.06);
+            }
+        }
+
+        .timer-display {
+            position: absolute;
+            top: 15px;
+            right: 20px;
+            font-size: 1.2rem;
+            color: var(--stop-btn);
+            font-weight: bold;
+        }
+
+        .score-display {
+            position: absolute;
+            top: 15px;
+            left: 20px;
+            font-size: 1.2rem;
+            color: #d9406b;
+            font-weight: bold;
+            transition: transform 0.15s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        .score-pop {
+            transform: scale(1.4);
+            color: #ffb703;
+        }
+
+        .math-question {
+            font-size: 3.5rem;
+            font-weight: bold;
+            color: var(--text-dark);
+            margin-bottom: 20px;
+        }
+
+        .input-answer {
+            width: 80%;
+            max-width: 250px;
+            padding: 10px 15px;
+            font-size: 1.5rem;
+            border: 2px solid #ffccd5;
+            border-radius: 12px;
+            text-align: center;
+            outline: none;
+            color: var(--text-dark);
+        }
+
+        .input-answer:focus {
+            border-color: var(--primary-pink);
+        }
+
+        .status-message {
+            color: var(--primary-pink);
+            font-size: 1.1rem;
+        }
+
+        /* --- Summary Screen Overlay --- */
+        .summary-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 10;
+        }
+
+        .summary-title {
+            color: #d9406b;
+            font-size: 2rem;
+            margin-bottom: 15px;
+        }
+
+        .summary-details {
+            font-size: 1.2rem;
+            color: var(--text-dark);
+            margin-bottom: 20px;
+            text-align: center;
+            line-height: 1.8;
+        }
+
+        /* --- Buttons --- */
+        .btn-group-row {
+            display: flex;
+            gap: 12px;
+            width: 100%;
+        }
+
+        .btn {
+            flex: 1;
+            padding: 14px;
+            border: none;
+            border-radius: 12px;
+            color: white;
+            font-size: 1.1rem;
+            cursor: pointer;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 8px;
+            transition: opacity 0.2s, transform 0.1s;
+        }
+
+        .btn:active {
+            transform: scale(0.98);
+        }
+
+        .btn-start { background-color: var(--accent-btn); }
+        .btn-stop { background-color: var(--stop-btn); }
+        .btn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+        /* --- Right Panel (History & Highscore) --- */
+        .right-panel {
+            flex: 1;
+        }
+
+        .panel-title-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+        }
+
+        .history-title {
+            font-size: 1.2rem;
+            color: var(--text-dark);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-clear {
+            background: #ffe3e8;
+            border: none;
+            color: var(--stop-btn);
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            cursor: pointer;
+        }
+
+        .highscore-box {
+            background: #fff0f3;
+            padding: 10px 15px;
+            border-radius: 12px;
+            color: #d9406b;
+            font-weight: bold;
+            margin-bottom: 12px;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .history-list {
+            flex: 1;
+            overflow-y: auto;
+            border: 1px inset #fff0f3;
+            padding: 8px;
+            border-radius: 12px;
+        }
+
+        /* สไตล์แถวสำหรับสรุปคะแนนรวมของแต่ละรอบ */
+        .round-summary-item {
+            background: #ffe5ec;
+            color: #d9406b;
+            padding: 8px 12px;
+            font-weight: bold;
+            border-radius: 8px;
+            margin-top: 10px;
+            margin-bottom: 6px;
+            display: flex;
+            justify-content: space-between;
+            font-size: 1rem;
+            border-left: 5px solid var(--primary-pink);
+        }
+
+        .history-item {
+            padding: 6px 12px;
+            border-bottom: 1px solid #ffe3e8;
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.95rem;
+            padding-left: 20px; /* ย่นระยะเข้าไปเพื่อให้เห็นว่าอยู่ภายใต้รอบ */
+        }
+
+        .history-item.correct { color: #00a88f; }
+        .history-item.wrong { color: var(--stop-btn); }
+
+        /* Custom Scrollbar */
+        .history-list::-webkit-scrollbar { width: 6px; }
+        .history-list::-webkit-scrollbar-track { background: #f1f1f1; border-radius: 10px; }
+        .history-list::-webkit-scrollbar-thumb { background: #ffccd5; border-radius: 10px; }
+    </style>
+</head>
+<body>
+
+    <div class="effect-container" id="effectContainer"></div>
+
+    <div class="app-container">
+        
+        <div class="panel left-panel">
+            <h2 class="game-header">🌸 Chachar Math Game 🎀</h2>
+            
+            <div class="screen-box" id="screenBox">
+                <div class="score-display" id="scoreDisplay">คะแนน: 0</div>
+                <div class="timer-display" id="timerDisplay">⏱️ 45s</div>
+
+                <div id="idleScreen">
+                    <div class="bear-icon">🐻</div>
+                    <p class="status-message">กดปุ่มเริ่มเกมด้านล่างเพื่อเริ่มท้าทายฝีมือ!</p>
+                </div>
+
+                <div id="playingScreen" style="display: none; width: 100%;">
+                    <div class="math-question" id="questionText">0 + 0</div>
+                    <input type="number" class="input-answer" id="answerInput" placeholder="พิมพ์คำตอบแล้วกด Enter">
+                </div>
+
+                <div class="summary-overlay" id="summaryScreen" style="display: none;">
+                    <h3 class="summary-title">🎉 จบเกมแล้ว! 🎉</h3>
+                    <div class="summary-details" id="summaryDetails">
+                        คะแนนที่ได้: 0 คะแนน<br>
+                        ตอบถูก: 0 ข้อ | ตอบผิด: 0 ข้อ
+                    </div>
+                    <button class="btn btn-start" style="flex: none; width: 180px;" onclick="startGame()">🔄 เล่นอีกครั้ง</button>
+                </div>
+            </div>
+
+            <div class="btn-group-row">
+                <button class="btn btn-start" id="btnStart" onclick="startGame()">▶️ Start Game</button>
+                <button class="btn btn-stop" id="btnStop" onclick="stopGame()" disabled>⏹️ Stop Game</button>
+            </div>
+        </div>
+
+        <div class="panel right-panel">
+            <div class="panel-title-row">
+                <h3 class="history-title">📸 Round History</h3>
+                <button class="btn-clear" onclick="clearHistory()">ล้างประวัติทั้งหมด</button>
+            </div>
+
+            <div class="highscore-box">
+                <span>🏆 High Score:</span>
+                <span id="highScoreText">0</span>
+            </div>
+
+            <div class="history-list" id="historyList">
+                </div>
+        </div>
+
+    </div>
+
+    <script>
+        let timer = null;
+        let timeLeft = 45;
+        let score = 0;
+        let correctCount = 0;
+        let wrongCount = 0;
+        let currentAnswer = 0;
+        let isPlaying = false;
+        let roundCounter = 0; // ตัวนับจำนวนรอบที่เล่นไป
+
+        const btnStart = document.getElementById('btnStart');
+        const btnStop = document.getElementById('btnStop');
+        const idleScreen = document.getElementById('idleScreen');
+        const playingScreen = document.getElementById('playingScreen');
+        const summaryScreen = document.getElementById('summaryScreen');
+        const questionText = document.getElementById('questionText');
+        const answerInput = document.getElementById('answerInput');
+        const scoreDisplay = document.getElementById('scoreDisplay');
+        const timerDisplay = document.getElementById('timerDisplay');
+        const summaryDetails = document.getElementById('summaryDetails');
+        const historyList = document.getElementById('historyList');
+        const highScoreText = document.getElementById('highScoreText');
+        const effectContainer = document.getElementById('effectContainer');
+
+        window.onload = () => {
+            loadHighScore();
+            generateInitialPetals();
+        };
+
+        function startGame() {
+            if (isPlaying) return;
+
+            isPlaying = true;
+            score = 0;
+            correctCount = 0;
+            wrongCount = 0;
+            timeLeft = 45;
+            roundCounter++; // เพิ่มรอบใหม่
+            
+            updateScoreDisplay();
+            timerDisplay.innerText = `⏱️ ${timeLeft}s`;
+
+            btnStart.disabled = true;
+            btnStop.disabled = false;
+            idleScreen.style.display = 'none';
+            summaryScreen.style.display = 'none';
+            playingScreen.style.display = 'block';
+
+            answerInput.value = '';
+            answerInput.focus();
+
+            generateQuestion();
+            
+            clearInterval(timer);
+            timer = setInterval(() => {
+                timeLeft--;
+                timerDisplay.innerText = `⏱️ ${timeLeft}s`;
+
+                if (timeLeft <= 0) {
+                    endGame();
+                }
+            }, 1000);
+        }
+
+        function stopGame() {
+            if (!isPlaying) return;
+            endGame();
+        }
+
+        function endGame() {
+            clearInterval(timer);
+            isPlaying = false;
+            
+            btnStart.disabled = false;
+            btnStop.disabled = true;
+            playingScreen.style.display = 'none';
+            
+            summaryDetails.innerHTML = `คะแนนรวมที่ทำได้: <b>${score}</b> คะแนน<br>👍 ตอบถูก: ${correctCount} ข้อ | 👎 ตอบผิด: ${wrongCount} ข้อ`;
+            summaryScreen.style.display = 'flex';
+
+            // บันทึกแถบ "สรุปคะแนนรวมประจำรอบ" ส่งไปที่ฝั่งขวา
+            addRoundSummaryToHistory(roundCounter, score, correctCount, wrongCount);
+            
+            checkHighScore();
+        }
+
+        function generateQuestion() {
+            const operators = ['+', '-', '*'];
+            const op = operators[Math.floor(Math.random() * operators.length)];
+            let num1, num2;
+
+            if (op === '+') {
+                num1 = Math.floor(Math.random() * 90) + 10;
+                num2 = Math.floor(Math.random() * 90) + 10;
+                currentAnswer = num1 + num2;
+            } else if (op === '-') {
+                num1 = Math.floor(Math.random() * 90) + 10;
+                num2 = Math.floor(Math.random() * num1); 
+                currentAnswer = num1 - num2;
+            } else {
+                num1 = Math.floor(Math.random() * 12) + 2; 
+                num2 = Math.floor(Math.random() * 10) + 2; 
+                currentAnswer = num1 * num2;
+            }
+
+            questionText.innerText = `${num1} ${op} ${num2}`;
+        }
+
+        answerInput.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') {
+                const userAnswer = parseInt(answerInput.value);
+                if (isNaN(userAnswer)) return;
+
+                const questionContext = questionText.innerText;
+
+                if (userAnswer === currentAnswer) {
+                    score += 10;
+                    correctCount++;
+                    addHistoryItem(questionContext, userAnswer, true);
+                    triggerScorePopEffect();
+                } else {
+                    wrongCount++;
+                    addHistoryItem(questionContext, userAnswer, false);
+                }
+
+                updateScoreDisplay();
+                answerInput.value = '';
+                generateQuestion();
+            }
+        });
+
+        function updateScoreDisplay() {
+            scoreDisplay.innerText = `คะแนน: ${score}`;
+        }
+
+        function triggerScorePopEffect() {
+            scoreDisplay.classList.add('score-pop');
+            setTimeout(() => {
+                scoreDisplay.classList.remove('score-pop');
+            }, 150);
+        }
+
+        function checkHighScore() {
+            const currentRecord = parseInt(localStorage.getItem('math_high_score')) || 0;
+            if (score > currentRecord) {
+                localStorage.setItem('math_high_score', score);
+                loadHighScore();
+            }
+        }
+
+        function loadHighScore() {
+            const currentRecord = localStorage.getItem('math_high_score') || 0;
+            highScoreText.innerText = currentRecord;
+        }
+
+        // เพิ่มคำตอบรายข้อ
+        function addHistoryItem(question, answer, isCorrect) {
+            const item = document.createElement('div');
+            item.className = `history-item ${isCorrect ? 'correct' : 'wrong'}`;
+            item.innerHTML = `
+                <span>${question} = ${answer}</span>
+                <span>${isCorrect ? '✅ ถูกต้อง (+10)' : '❌ ผิด'}</span>
+            `;
+            historyList.prepend(item); 
+        }
+
+        // ฟังก์ชันใหม่: เพิ่มกล่องรวมคะแนนสะสมรอบนั้นๆ
+        function addRoundSummaryToHistory(round, finalScore, correct, wrong) {
+            const summaryItem = document.createElement('div');
+            summaryItem.className = 'round-summary-item';
+            summaryItem.innerHTML = `
+                <span>🏅 รอบที่ ${round} (ถูก ${correct} | ผิด ${wrong})</span>
+                <span>รวม: ${finalScore} คะแนน</span>
+            `;
+            // แทรกไว้เหนือสุดของประวัติรอบปัจจุบัน
+            historyList.prepend(summaryItem);
+        }
+
+        function clearHistory() {
+            historyList.innerHTML = '';
+            localStorage.removeItem('math_high_score');
+            highScoreText.innerText = '0';
+            roundCounter = 0;
+        }
+
+        function generateInitialPetals() {
+            createPetals(15);
+            setInterval(() => {
+                if(document.querySelectorAll('.petal').length < 25) {
+                    createPetals(3);
+                }
+            }, 2000);
+        }
+
+        function createPetals(count) {
+            for (let i = 0; i < count; i++) {
+                const petal = document.createElement('div');
+                petal.innerText = '🌸';
+                petal.className = 'petal';
+                petal.style.left = Math.random() * 100 + 'vw';
+                petal.style.fontSize = Math.random() * 12 + 12 + 'px';
+                petal.style.animationDuration = Math.random() * 4 + 4 + 's'; 
+                petal.style.animationDelay = Math.random() * 2 + 's';
+                
+                effectContainer.appendChild(petal);
+
+                petal.addEventListener('animationend', () => {
+                    petal.remove();
+                });
+            }
+        }
+    </script>
+</body>
+</html>
