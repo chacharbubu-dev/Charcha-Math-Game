@@ -4,15 +4,19 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Chachar Math Game 🌸</title>
-    <link href="https://fonts.googleapis.com/css2?family=Mitr:wght=300;400;500&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Mitr:wght@300;400;500;600&display=swap" rel="stylesheet">
     <style>
         :root {
-            --bg-color: #ffeef2;
-            --panel-bg: #ffffff;
-            --primary-pink: #ff8fa3;
-            --accent-btn: #00cba9;
+            /* โทนสีหลักตามรูปภาพ (ชมพูซากุระ) */
+            --bg-gradient: linear-gradient(135deg, #ffccd5 0%, #ffafbd 100%);
+            --panel-bg: rgba(255, 255, 255, 0.75);
+            --inner-bg: rgba(255, 255, 255, 0.9);
+            --primary-pink: #ff758f;
+            --accent-btn: #00b4d8;
             --stop-btn: #ff4d6d;
-            --text-dark: #4a4a4a;
+            --text-dark: #5c3d46;
+            --text-pink: #d9406b;
+            --border-color: rgba(255, 182, 193, 0.6);
         }
 
         * {
@@ -23,7 +27,7 @@
         }
 
         body {
-            background-color: var(--bg-color);
+            background: var(--bg-gradient);
             min-height: 100vh;
             display: flex;
             justify-content: center;
@@ -32,82 +36,88 @@
             position: relative;
         }
 
-        /* --- 🌸 อนิเมชันกลีบดอกไม้พริ้วไหวอัตโนมัติ --- */
-        .effect-container {
+        /* --- ตกแต่งฉากหลัง (ก้อนเมฆ ดอกซากุระ กระต่าย) --- */
+        body::before {
+            content: '';
             position: absolute;
-            top: 0;
-            left: 0;
             width: 100%;
             height: 100%;
+            background-image: 
+                url('https://img.icons8.com/illustrations/external-pack-justicon-gradient-justicon/100/external-rabbit-easter-pack-justicon-gradient-justicon.png'),
+                url('https://img.icons8.com/plasticine/100/cherry-blossoms.png');
+            background-repeat: no-repeat;
+            background-position: left bottom 20px, left top 20px;
+            background-size: 150px, 200px;
+            opacity: 0.35;
             pointer-events: none;
-            z-index: 1;
+            z-index: 0;
+        }
+
+        /* --- 🌸 อนิเมชันกลีบดอกไม้โปรย --- */
+        .effect-container {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            pointer-events: none; z-index: 1;
         }
 
         .petal {
-            position: absolute;
-            opacity: 0;
+            position: absolute; opacity: 0;
             animation: floatAndSpin linear infinite;
         }
 
         @keyframes floatAndSpin {
-            0% {
-                transform: translateY(-20px) translateX(0) rotate(0deg);
-                opacity: 0;
-            }
-            10% {
-                opacity: 0.8;
-            }
-            50% {
-                transform: translateY(50vh) translateX(40px) rotate(180deg);
-            }
-            100% {
-                transform: translateY(105vh) translateX(-10px) rotate(360deg);
-                opacity: 0;
-            }
+            0% { transform: translateY(-20px) translateX(0) rotate(0deg); opacity: 0; }
+            10% { opacity: 0.8; }
+            50% { transform: translateY(50vh) translateX(40px) rotate(180deg); }
+            100% { transform: translateY(105vh) translateX(-10px) rotate(360deg); opacity: 0; }
         }
 
         /* --- Main Layout --- */
         .app-container {
             display: flex;
-            gap: 24px;
-            width: 90%;
-            max-width: 1100px;
-            height: 85vh;
+            flex-direction: column;
+            gap: 16px;
+            width: 95%;
+            max-width: 1000px;
             z-index: 2;
+        }
+
+        .main-panels {
+            display: flex;
+            gap: 20px;
+            height: 55vh;
+            min-height: 420px;
         }
 
         .panel {
             background: var(--panel-bg);
-            border-radius: 24px;
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border-radius: 32px;
             padding: 24px;
-            box-shadow: 0 8px 24px rgba(255, 143, 163, 0.15);
+            box-shadow: 0 12px 40px rgba(255, 143, 163, 0.25);
+            border: 4px solid #ffffff;
             display: flex;
             flex-direction: column;
         }
 
-        /* --- Left Panel (Game Area) --- */
-        .left-panel {
-            flex: 1.2;
-            align-items: center;
-            position: relative;
-        }
+        .left-panel { flex: 1.3; align-items: center; position: relative; }
+        .right-panel { flex: 1; }
 
         .game-header {
             text-align: center;
-            color: #d9406b;
+            color: var(--text-pink);
             margin-bottom: 16px;
-            font-size: 1.6rem;
-            display: flex;
-            align-items: center;
-            gap: 8px;
+            font-size: 1.8rem;
+            font-weight: 500;
         }
 
         .screen-box {
             width: 100%;
             flex: 1;
-            border: 3px solid #ffccd5;
-            border-radius: 20px;
-            background: #fffcfd;
+            border-radius: 24px;
+            background: var(--inner-bg);
+            border: 2px solid var(--border-color);
             display: flex;
             flex-direction: column;
             justify-content: center;
@@ -118,214 +128,121 @@
             text-align: center;
         }
 
-        /* --- 🐻 อนิเมชันน้องหมีดุ๊กดิ๊กขยับดึ๋งๆ --- */
-        .bear-icon {
-            font-size: 4rem;
-            margin-bottom: 10px;
-            display: inline-block;
-            animation: bearBounce 2.5s ease-in-out infinite;
+        /* 🐻 อนิเมชันน้องหมี */
+        .bear-container {
+            width: 130px;
+            height: 130px;
+            background: url('https://img.icons8.com/sticker/100/teddy-bear.png') no-repeat center;
+            background-size: contain;
+            animation: bearBounce 3s ease-in-out infinite;
+            margin-bottom: 12px;
         }
 
         @keyframes bearBounce {
-            0%, 100% {
-                transform: translateY(0) scale(1);
-            }
-            50% {
-                transform: translateY(-6px) scale(1.06);
-            }
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            50% { transform: translateY(-8px) rotate(3deg); }
         }
 
         .timer-display {
             position: absolute;
-            top: 15px;
-            right: 20px;
-            font-size: 1.2rem;
-            color: var(--stop-btn);
-            font-weight: bold;
+            top: 15px; right: 20px;
+            font-size: 1.3rem; color: var(--text-dark); font-weight: 500;
         }
 
         .score-display {
             position: absolute;
-            top: 15px;
-            left: 20px;
-            font-size: 1.2rem;
-            color: #d9406b;
-            font-weight: bold;
-            transition: transform 0.15s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            top: 15px; left: 20px;
+            font-size: 1.3rem; color: var(--text-pink); font-weight: bold;
+            transition: transform 0.15s;
         }
 
-        .score-pop {
-            transform: scale(1.4);
-            color: #ffb703;
-        }
+        .score-pop { transform: scale(1.3); }
 
         .math-question {
-            font-size: 3.5rem;
-            font-weight: bold;
+            font-size: 3.8rem;
+            font-weight: 600;
             color: var(--text-dark);
-            margin-bottom: 20px;
-        }
-
-        .input-answer {
-            width: 80%;
-            max-width: 250px;
-            padding: 10px 15px;
-            font-size: 1.5rem;
-            border: 2px solid #ffccd5;
-            border-radius: 12px;
-            text-align: center;
-            outline: none;
-            color: var(--text-dark);
-        }
-
-        .input-answer:focus {
-            border-color: var(--primary-pink);
-        }
-
-        .status-message {
-            color: var(--primary-pink);
-            font-size: 1.1rem;
-        }
-
-        /* --- Summary Screen Overlay --- */
-        .summary-overlay {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(255, 255, 255, 0.95);
-            border-radius: 20px;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            z-index: 10;
-        }
-
-        .summary-title {
-            color: #d9406b;
-            font-size: 2rem;
             margin-bottom: 15px;
         }
 
-        .summary-details {
-            font-size: 1.2rem;
+        .input-answer {
+            width: 80%; max-width: 260px; padding: 12px;
+            font-size: 1.6rem; border: 2px solid var(--border-color);
+            border-radius: 16px; text-align: center; outline: none;
             color: var(--text-dark);
-            margin-bottom: 20px;
-            text-align: center;
-            line-height: 1.8;
         }
 
-        /* --- Buttons --- */
-        .btn-group-row {
-            display: flex;
-            gap: 12px;
-            width: 100%;
-        }
-
+        /* Buttons Row */
+        .btn-group-row { display: flex; gap: 14px; width: 100%; }
         .btn {
-            flex: 1;
-            padding: 14px;
-            border: none;
-            border-radius: 12px;
-            color: white;
-            font-size: 1.1rem;
-            cursor: pointer;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            gap: 8px;
-            transition: opacity 0.2s, transform 0.1s;
+            flex: 1; padding: 14px; border: none; border-radius: 18px;
+            color: white; font-size: 1.2rem; cursor: pointer;
+            display: flex; justify-content: center; align-items: center; gap: 8px;
+            box-shadow: 0 6px 15px rgba(0,0,0,0.1); font-weight: 500;
         }
-
-        .btn:active {
-            transform: scale(0.98);
-        }
-
         .btn-start { background-color: var(--accent-btn); }
         .btn-stop { background-color: var(--stop-btn); }
         .btn:disabled { opacity: 0.5; cursor: not-allowed; }
 
-        /* --- Right Panel (History & Highscore) --- */
-        .right-panel {
-            flex: 1;
-        }
-
-        .panel-title-row {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 16px;
-        }
-
-        .history-title {
-            font-size: 1.2rem;
-            color: var(--text-dark);
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
+        /* --- ฝั่งขวา: ประวัติ --- */
+        .panel-title-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; }
+        .history-title { font-size: 1.3rem; color: var(--text-dark); font-weight: 500; }
         .btn-clear {
-            background: #ffe3e8;
-            border: none;
-            color: var(--stop-btn);
-            padding: 6px 12px;
-            border-radius: 20px;
-            font-size: 0.85rem;
-            cursor: pointer;
+            background: #fff0f3; border: none; color: var(--stop-btn);
+            padding: 6px 14px; border-radius: 20px; font-size: 0.9rem; cursor: pointer;
         }
-
         .highscore-box {
-            background: #fff0f3;
-            padding: 10px 15px;
-            border-radius: 12px;
-            color: #d9406b;
-            font-weight: bold;
-            margin-bottom: 12px;
-            display: flex;
-            justify-content: space-between;
+            background: var(--inner-bg); border: 2px solid var(--border-color);
+            padding: 12px 20px; border-radius: 16px; color: var(--text-pink);
+            font-weight: bold; margin-bottom: 12px; display: flex; justify-content: space-between;
+            font-size: 1.1rem;
         }
-
         .history-list {
-            flex: 1;
-            overflow-y: auto;
-            border: 1px inset #fff0f3;
-            padding: 8px;
-            border-radius: 12px;
+            flex: 1; overflow-y: auto; border: 1px solid var(--border-color);
+            padding: 10px; border-radius: 16px; background: var(--inner-bg);
+            display: flex; flex-direction: column; gap: 6px;
         }
-
-        /* สไตล์แถวสำหรับสรุปคะแนนรวมของแต่ละรอบ */
-        .round-summary-item {
-            background: #ffe5ec;
-            color: #d9406b;
-            padding: 8px 12px;
-            font-weight: bold;
-            border-radius: 8px;
-            margin-top: 10px;
-            margin-bottom: 6px;
-            display: flex;
-            justify-content: space-between;
-            font-size: 1rem;
-            border-left: 5px solid var(--primary-pink);
-        }
-
-        .history-item {
-            padding: 6px 12px;
-            border-bottom: 1px solid #ffe3e8;
-            display: flex;
-            justify-content: space-between;
-            font-size: 0.95rem;
-            padding-left: 20px; /* ย่นระยะเข้าไปเพื่อให้เห็นว่าอยู่ภายใต้รอบ */
-        }
-
-        .history-item.correct { color: #00a88f; }
+        .no-history { margin: auto; text-align: center; color: var(--text-pink); opacity: 0.7; }
+        .history-item { padding: 8px 12px; border-bottom: 1px solid rgba(0,0,0,0.05); display: flex; justify-content: space-between; }
+        .history-item.correct { color: #2a9d8f; font-weight: 500; }
         .history-item.wrong { color: var(--stop-btn); }
+        .round-summary-item { background: #ffe5ec; color: #d9406b; padding: 8px 12px; font-weight: bold; border-radius: 10px; display: flex; justify-content: space-between; }
 
-        /* Custom Scrollbar */
+        /* --- ⚙️ พาเนลตั้งค่าด้านล่าง --- */
+        .settings-panel {
+            background: var(--panel-bg); backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px); border-radius: 24px;
+            padding: 16px 24px; border: 4px solid #ffffff;
+            display: flex; justify-content: center; align-items: center; gap: 60px;
+            box-shadow: 0 8px 30px rgba(255, 143, 163, 0.15);
+        }
+        .setting-group { display: flex; flex-direction: column; align-items: center; gap: 8px; }
+        .setting-label { font-size: 1rem; color: var(--text-pink); font-weight: 500; }
+        .selector-options { display: flex; gap: 10px; }
+        .opt-btn {
+            border: none; padding: 8px 20px; border-radius: 12px; cursor: pointer;
+            font-size: 1rem; background: #ffffff; color: var(--text-dark);
+            transition: all 0.2s; box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+        }
+        
+        .opt-btn.active[data-diff="easy"] { background-color: #52b788; color: white; }
+        .opt-btn.active[data-diff="medium"] { background-color: #fbc403; color: white; }
+        .opt-btn.active[data-diff="hard"] { background-color: #ff4d6d; color: white; }
+        .opt-btn.active[data-time] { background-color: var(--stop-btn); color: white; }
+
+        .tip-box {
+            text-align: center; font-size: 0.9rem; color: #6c757d;
+            background: rgba(255,255,255,0.5); padding: 6px; border-radius: 12px;
+            margin-top: -4px; width: 100%;
+        }
+
+        .summary-overlay {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(255, 255, 255, 0.95); border-radius: 24px;
+            display: flex; flex-direction: column; justify-content: center; align-items: center; z-index: 10;
+        }
+
         .history-list::-webkit-scrollbar { width: 6px; }
-        .history-list::-webkit-scrollbar-track { background: #f1f1f1; border-radius: 10px; }
         .history-list::-webkit-scrollbar-thumb { background: #ffccd5; border-radius: 10px; }
     </style>
 </head>
@@ -335,65 +252,98 @@
 
     <div class="app-container">
         
-        <div class="panel left-panel">
-            <h2 class="game-header">🌸 Chachar Math Game 🎀</h2>
-            
-            <div class="screen-box" id="screenBox">
-                <div class="score-display" id="scoreDisplay">คะแนน: 0</div>
-                <div class="timer-display" id="timerDisplay">⏱️ 45s</div>
+        <div class="main-panels">
+            <div class="panel left-panel">
+                <h2 class="game-header">🌸 Chachar Math Game 🎀</h2>
+                
+                <div class="screen-box" id="screenBox">
+                    <div class="score-display" id="scoreDisplay">คะแนน: 0</div>
+                    <div class="timer-display" id="timerDisplay">⏱️ 45s</div>
 
-                <div id="idleScreen">
-                    <div class="bear-icon">🐻</div>
-                    <p class="status-message">กดปุ่มเริ่มเกมด้านล่างเพื่อเริ่มท้าทายฝีมือ!</p>
-                </div>
-
-                <div id="playingScreen" style="display: none; width: 100%;">
-                    <div class="math-question" id="questionText">0 + 0</div>
-                    <input type="number" class="input-answer" id="answerInput" placeholder="พิมพ์คำตอบแล้วกด Enter">
-                </div>
-
-                <div class="summary-overlay" id="summaryScreen" style="display: none;">
-                    <h3 class="summary-title">🎉 จบเกมแล้ว! 🎉</h3>
-                    <div class="summary-details" id="summaryDetails">
-                        คะแนนที่ได้: 0 คะแนน<br>
-                        ตอบถูก: 0 ข้อ | ตอบผิด: 0 ข้อ
+                    <div id="idleScreen">
+                        <div class="bear-container"></div>
+                        <p style="color: var(--text-pink);">กดปุ่มเริ่มเกมด้านล่างเพื่อเริ่มท้าทายฝีมือ!</p>
                     </div>
-                    <button class="btn btn-start" style="flex: none; width: 180px;" onclick="startGame()">🔄 เล่นอีกครั้ง</button>
+
+                    <div id="playingScreen" style="display: none; width: 100%;">
+                        <div class="math-question" id="questionText">0 + 0</div>
+                        <input type="number" class="input-answer" id="answerInput" placeholder="พิมพ์คำตอบแล้วกด Enter">
+                    </div>
+
+                    <div class="summary-overlay" id="summaryScreen" style="display: none;">
+                        <h3 class="game-header" style="font-size: 2rem;">🎉 จบเกมแล้ว! 🎉</h3>
+                        <div id="summaryDetails" style="margin-bottom: 20px; line-height: 1.8; color: var(--text-dark);">
+                            คะแนนที่ได้: 0 คะแนน
+                        </div>
+                        <button class="btn btn-start" style="flex: none; width: 180px; padding: 10px;" onclick="startGame()">🔄 เล่นอีกครั้ง</button>
+                    </div>
+                </div>
+
+                <div class="btn-group-row">
+                    <button class="btn btn-start" id="btnStart" onclick="startGame()">▶ &nbsp;Start Game</button>
+                    <button class="btn btn-stop" id="btnStop" onclick="stopGame()" disabled>⏹ &nbsp;Stop Game</button>
                 </div>
             </div>
 
-            <div class="btn-group-row">
-                <button class="btn btn-start" id="btnStart" onclick="startGame()">▶️ Start Game</button>
-                <button class="btn btn-stop" id="btnStop" onclick="stopGame()" disabled>⏹️ Stop Game</button>
+            <div class="panel right-panel">
+                <div class="panel-title-row">
+                    <h3 class="history-title">📸 Round History</h3>
+                    <button class="btn-clear" onclick="clearHistory()">ล้างประวัติทั้งหมด</button>
+                </div>
+
+                <div class="highscore-box">
+                    <span>🏆 High Score:</span>
+                    <span id="highScoreText">0</span>
+                </div>
+
+                <div class="history-list" id="historyList">
+                    <div class="no-history" id="noHistory">
+                        <img src="https://img.icons8.com/pastel-glyph/64/d9406b/clipboard.png" style="opacity: 0.5; margin-bottom: 10px;"><br>
+                        ยังไม่มีประวัติการเล่น<br><span style="font-size: 0.85rem;">เริ่มเกมเพื่อสร้างประวัติของคุณ!</span>
+                    </div>
+                </div>
             </div>
         </div>
 
-        <div class="panel right-panel">
-            <div class="panel-title-row">
-                <h3 class="history-title">📸 Round History</h3>
-                <button class="btn-clear" onclick="clearHistory()">ล้างประวัติทั้งหมด</button>
-            </div>
-
-            <div class="highscore-box">
-                <span>🏆 High Score:</span>
-                <span id="highScoreText">0</span>
-            </div>
-
-            <div class="history-list" id="historyList">
+        <div class="settings-panel">
+            <div class="setting-group">
+                <span class="setting-label">ระดับความยาก</span>
+                <div class="selector-options" id="diffSelector">
+                    <button class="opt-btn active" data-diff="easy">⭐ ง่าย</button>
+                    <button class="opt-btn" data-diff="medium">⭐ กลาง</button>
+                    <button class="opt-btn" data-diff="hard">⭐ ยาก</button>
                 </div>
+            </div>
+
+            <div class="setting-group">
+                <span class="setting-label">เวลาที่ใช้เล่น</span>
+                <div class="selector-options" id="timeSelector">
+                    <button class="opt-btn" data-time="30">30s</button>
+                    <button class="opt-btn active" data-time="45">45s</button>
+                    <button class="opt-btn" data-time="60">60s</button>
+                    <button class="opt-btn" data-time="90">90s</button>
+                    <button class="opt-btn" data-time="120">120s</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="tip-box">
+            💡 <b>Tip:</b> ตอบให้ถูกต้องและรวดเร็วเพื่อทำคะแนนให้สูงขึ้น! ✨
         </div>
 
     </div>
 
     <script>
         let timer = null;
+        let selectedTime = 45;
         let timeLeft = 45;
         let score = 0;
         let correctCount = 0;
         let wrongCount = 0;
         let currentAnswer = 0;
         let isPlaying = false;
-        let roundCounter = 0; // ตัวนับจำนวนรอบที่เล่นไป
+        let roundCounter = 0;
+        let currentDifficulty = 'easy';
 
         const btnStart = document.getElementById('btnStart');
         const btnStop = document.getElementById('btnStop');
@@ -406,90 +356,123 @@
         const timerDisplay = document.getElementById('timerDisplay');
         const summaryDetails = document.getElementById('summaryDetails');
         const historyList = document.getElementById('historyList');
+        const noHistory = document.getElementById('noHistory');
         const highScoreText = document.getElementById('highScoreText');
         const effectContainer = document.getElementById('effectContainer');
 
         window.onload = () => {
             loadHighScore();
             generateInitialPetals();
+            setupSettingsListeners();
         };
+
+        function setupSettingsListeners() {
+            document.querySelectorAll('#diffSelector .opt-btn').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    if (isPlaying) return;
+                    document.querySelectorAll('#diffSelector .opt-btn').forEach(b => b.classList.remove('active'));
+                    e.target.classList.add('active');
+                    currentDifficulty = e.target.getAttribute('data-diff');
+                });
+            });
+
+            document.querySelectorAll('#timeSelector .opt-btn').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    if (isPlaying) return;
+                    document.querySelectorAll('#timeSelector .opt-btn').forEach(b => b.classList.remove('active'));
+                    e.target.classList.add('active');
+                    selectedTime = parseInt(e.target.getAttribute('data-time'));
+                    timerDisplay.innerText = `⏱️ ${selectedTime}s`;
+                });
+            });
+        }
 
         function startGame() {
             if (isPlaying) return;
-
             isPlaying = true;
-            score = 0;
-            correctCount = 0;
-            wrongCount = 0;
-            timeLeft = 45;
-            roundCounter++; // เพิ่มรอบใหม่
+            score = 0; correctCount = 0; wrongCount = 0;
+            timeLeft = selectedTime; roundCounter++;
             
+            if(noHistory) noHistory.style.display = 'none';
             updateScoreDisplay();
             timerDisplay.innerText = `⏱️ ${timeLeft}s`;
+            toggleSettingsInput(true);
 
-            btnStart.disabled = true;
-            btnStop.disabled = false;
-            idleScreen.style.display = 'none';
-            summaryScreen.style.display = 'none';
+            btnStart.disabled = true; btnStop.disabled = false;
+            idleScreen.style.display = 'none'; summaryScreen.style.display = 'none';
             playingScreen.style.display = 'block';
 
-            answerInput.value = '';
-            answerInput.focus();
-
+            answerInput.value = ''; answerInput.focus();
             generateQuestion();
             
             clearInterval(timer);
             timer = setInterval(() => {
                 timeLeft--;
                 timerDisplay.innerText = `⏱️ ${timeLeft}s`;
-
-                if (timeLeft <= 0) {
-                    endGame();
-                }
+                if (timeLeft <= 0) endGame();
             }, 1000);
         }
 
-        function stopGame() {
-            if (!isPlaying) return;
-            endGame();
-        }
+        function stopGame() { if (isPlaying) endGame(); }
 
         function endGame() {
             clearInterval(timer);
             isPlaying = false;
-            
-            btnStart.disabled = false;
-            btnStop.disabled = true;
+            btnStart.disabled = false; btnStop.disabled = true;
             playingScreen.style.display = 'none';
-            
-            summaryDetails.innerHTML = `คะแนนรวมที่ทำได้: <b>${score}</b> คะแนน<br>👍 ตอบถูก: ${correctCount} ข้อ | 👎 ตอบผิด: ${wrongCount} ข้อ`;
+            toggleSettingsInput(false);
+
+            summaryDetails.innerHTML = `คะแนนที่ทำได้: <b>${score}</b> คะแนน<br>ถูก: ${correctCount} | ผิด: ${wrongCount} (ระดับ: ${currentDifficulty})`;
             summaryScreen.style.display = 'flex';
 
-            // บันทึกแถบ "สรุปคะแนนรวมประจำรอบ" ส่งไปที่ฝั่งขวา
             addRoundSummaryToHistory(roundCounter, score, correctCount, wrongCount);
-            
             checkHighScore();
         }
 
+        function toggleSettingsInput(disable) {
+            document.querySelectorAll('.opt-btn').forEach(el => {
+                el.style.pointerEvents = disable ? 'none' : 'auto';
+                el.style.opacity = disable ? '0.6' : '1';
+            });
+        }
+
         function generateQuestion() {
-            const operators = ['+', '-', '*'];
-            const op = operators[Math.floor(Math.random() * operators.length)];
-            let num1, num2;
-
-            if (op === '+') {
-                num1 = Math.floor(Math.random() * 90) + 10;
-                num2 = Math.floor(Math.random() * 90) + 10;
-                currentAnswer = num1 + num2;
-            } else if (op === '-') {
-                num1 = Math.floor(Math.random() * 90) + 10;
-                num2 = Math.floor(Math.random() * num1); 
-                currentAnswer = num1 - num2;
+            let num1, num2, op;
+            const ops = ['+', '-'];
+            
+            if (currentDifficulty === 'easy') {
+                op = ops[Math.floor(Math.random() * ops.length)];
+                num1 = Math.floor(Math.random() * 20) + 5;
+                num2 = Math.floor(Math.random() * 15) + 1;
+                if(op === '-' && num1 < num2) [num1, num2] = [num2, num1];
+                currentAnswer = (op === '+') ? num1 + num2 : num1 - num2;
+            } else if (currentDifficulty === 'medium') {
+                const mediumOps = ['+', '-', '*'];
+                op = mediumOps[Math.floor(Math.random() * mediumOps.length)];
+                if (op === '*') {
+                    num1 = Math.floor(Math.random() * 12) + 2;
+                    num2 = Math.floor(Math.random() * 10) + 2;
+                    currentAnswer = num1 * num2;
+                } else {
+                    num1 = Math.floor(Math.random() * 100) + 20;
+                    num2 = Math.floor(Math.random() * 80) + 10;
+                    if(op === '-' && num1 < num2) [num1, num2] = [num2, num1];
+                    currentAnswer = (op === '+') ? num1 + num2 : num1 - num2;
+                }
             } else {
-                num1 = Math.floor(Math.random() * 12) + 2; 
-                num2 = Math.floor(Math.random() * 10) + 2; 
-                currentAnswer = num1 * num2;
+                const hardOps = ['+', '-', '*'];
+                op = hardOps[Math.floor(Math.random() * hardOps.length)];
+                if (op === '*') {
+                    num1 = Math.floor(Math.random() * 30) + 10;
+                    num2 = Math.floor(Math.random() * 15) + 5;
+                    currentAnswer = num1 * num2;
+                } else {
+                    num1 = Math.floor(Math.random() * 900) + 100;
+                    num2 = Math.floor(Math.random() * 800) + 50;
+                    if(op === '-' && num1 < num2) [num1, num2] = [num2, num1];
+                    currentAnswer = (op === '+') ? num1 + num2 : num1 - num2;
+                }
             }
-
             questionText.innerText = `${num1} ${op} ${num2}`;
         }
 
@@ -497,11 +480,9 @@
             if (e.key === 'Enter') {
                 const userAnswer = parseInt(answerInput.value);
                 if (isNaN(userAnswer)) return;
-
                 const questionContext = questionText.innerText;
-
                 if (userAnswer === currentAnswer) {
-                    score += 10;
+                    score += (currentDifficulty === 'easy') ? 10 : (currentDifficulty === 'medium' ? 20 : 40);
                     correctCount++;
                     addHistoryItem(questionContext, userAnswer, true);
                     triggerScorePopEffect();
@@ -509,91 +490,60 @@
                     wrongCount++;
                     addHistoryItem(questionContext, userAnswer, false);
                 }
-
-                updateScoreDisplay();
-                answerInput.value = '';
-                generateQuestion();
+                updateScoreDisplay(); answerInput.value = ''; generateQuestion();
             }
         });
 
-        function updateScoreDisplay() {
-            scoreDisplay.innerText = `คะแนน: ${score}`;
-        }
-
+        function updateScoreDisplay() { scoreDisplay.innerText = `คะแนน: ${score}`; }
         function triggerScorePopEffect() {
             scoreDisplay.classList.add('score-pop');
-            setTimeout(() => {
-                scoreDisplay.classList.remove('score-pop');
-            }, 150);
+            setTimeout(() => scoreDisplay.classList.remove('score-pop'), 150);
         }
 
         function checkHighScore() {
-            const currentRecord = parseInt(localStorage.getItem('math_high_score')) || 0;
+            const currentRecord = parseInt(localStorage.getItem('math_high_score_v2')) || 0;
             if (score > currentRecord) {
-                localStorage.setItem('math_high_score', score);
+                localStorage.setItem('math_high_score_v2', score);
                 loadHighScore();
             }
         }
 
-        function loadHighScore() {
-            const currentRecord = localStorage.getItem('math_high_score') || 0;
-            highScoreText.innerText = currentRecord;
-        }
+        function loadHighScore() { highScoreText.innerText = localStorage.getItem('math_high_score_v2') || 0; }
 
-        // เพิ่มคำตอบรายข้อ
         function addHistoryItem(question, answer, isCorrect) {
             const item = document.createElement('div');
             item.className = `history-item ${isCorrect ? 'correct' : 'wrong'}`;
-            item.innerHTML = `
-                <span>${question} = ${answer}</span>
-                <span>${isCorrect ? '✅ ถูกต้อง (+10)' : '❌ ผิด'}</span>
-            `;
+            item.innerHTML = `<span>${question} = ${answer}</span><span>${isCorrect ? '✅' : '❌'}</span>`;
             historyList.prepend(item); 
         }
 
-        // ฟังก์ชันใหม่: เพิ่มกล่องรวมคะแนนสะสมรอบนั้นๆ
         function addRoundSummaryToHistory(round, finalScore, correct, wrong) {
             const summaryItem = document.createElement('div');
             summaryItem.className = 'round-summary-item';
-            summaryItem.innerHTML = `
-                <span>🏅 รอบที่ ${round} (ถูก ${correct} | ผิด ${wrong})</span>
-                <span>รวม: ${finalScore} คะแนน</span>
-            `;
-            // แทรกไว้เหนือสุดของประวัติรอบปัจจุบัน
+            summaryItem.innerHTML = `<span>🏅 รอบที่ ${round} (ถูก ${correct} | ผิด ${wrong})</span><span>${finalScore} แต้ม</span>`;
             historyList.prepend(summaryItem);
         }
 
         function clearHistory() {
-            historyList.innerHTML = '';
-            localStorage.removeItem('math_high_score');
-            highScoreText.innerText = '0';
-            roundCounter = 0;
+            historyList.innerHTML = ''; localStorage.removeItem('math_high_score_v2');
+            highScoreText.innerText = '0'; roundCounter = 0;
+            if(noHistory) noHistory.style.display = 'block';
         }
 
         function generateInitialPetals() {
-            createPetals(15);
-            setInterval(() => {
-                if(document.querySelectorAll('.petal').length < 25) {
-                    createPetals(3);
-                }
-            }, 2000);
+            createPetals(8);
+            setInterval(() => { if(document.querySelectorAll('.petal').length < 15) createPetals(2); }, 4000);
         }
 
         function createPetals(count) {
             for (let i = 0; i < count; i++) {
                 const petal = document.createElement('div');
-                petal.innerText = '🌸';
-                petal.className = 'petal';
+                petal.innerText = '🌸'; petal.className = 'petal';
                 petal.style.left = Math.random() * 100 + 'vw';
-                petal.style.fontSize = Math.random() * 12 + 12 + 'px';
-                petal.style.animationDuration = Math.random() * 4 + 4 + 's'; 
-                petal.style.animationDelay = Math.random() * 2 + 's';
-                
+                petal.style.fontSize = Math.random() * 10 + 10 + 'px';
+                petal.style.animationDuration = Math.random() * 5 + 5 + 's'; 
                 effectContainer.appendChild(petal);
-
-                petal.addEventListener('animationend', () => {
-                    petal.remove();
-                });
+                petal.addEventListener('animationend', () => petal.remove());
             }
         }
     </script>
