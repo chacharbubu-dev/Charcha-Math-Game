@@ -7,13 +7,13 @@
     <link href="https://fonts.googleapis.com/css2?family=Mitr:wght@300;400;500;600&display=swap" rel="stylesheet">
     <style>
         :root {
-            /* โทนสีหลักตามรูปภาพ (ชมพูซากุระ) */
             --bg-gradient: linear-gradient(135deg, #ffccd5 0%, #ffafbd 100%);
             --panel-bg: rgba(255, 255, 255, 0.75);
             --inner-bg: rgba(255, 255, 255, 0.9);
             --primary-pink: #ff758f;
             --accent-btn: #00b4d8;
             --stop-btn: #ff4d6d;
+            --submit-btn: #4caf50;
             --text-dark: #5c3d46;
             --text-pink: #d9406b;
             --border-color: rgba(255, 182, 193, 0.6);
@@ -38,7 +38,6 @@
             padding: 15px;
         }
 
-        /* --- ตกแต่งฉากหลัง (ก้อนเมฆ ดอกซากุระ กระต่าย) --- */
         body::before {
             content: '';
             position: absolute;
@@ -55,7 +54,6 @@
             z-index: 0;
         }
 
-        /* --- 🌸 อนิเมชันกลีบดอกไม้โปรย --- */
         .effect-container {
             position: absolute;
             top: 0; left: 0; width: 100%; height: 100%;
@@ -74,7 +72,6 @@
             100% { transform: translateY(105vh) translateX(-10px) rotate(360deg); opacity: 0; }
         }
 
-        /* --- Main Layout --- */
         .app-container {
             display: flex;
             flex-direction: column;
@@ -117,7 +114,7 @@
         .screen-box {
             width: 100%;
             flex: 1;
-            min-height: 260px;
+            min-height: 280px;
             border-radius: 24px;
             background: var(--inner-bg);
             border: 2px solid var(--border-color);
@@ -131,7 +128,6 @@
             text-align: center;
         }
 
-        /* 🐻 อนิเมชันน้องหมี */
         .bear-container {
             width: 110px;
             height: 110px;
@@ -165,8 +161,16 @@
             font-size: 3.5rem;
             font-weight: 600;
             color: var(--text-dark);
-            margin-bottom: 15px;
-            word-break: break-all;
+            margin-bottom: 10px;
+        }
+
+        /* โซนกล่องคำตอบ + ปุ่มส่งบนมือถือ */
+        .answer-zone {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+            width: 100%;
         }
 
         .input-answer {
@@ -174,10 +178,26 @@
             font-size: 1.5rem; border: 2px solid var(--border-color);
             border-radius: 16px; text-align: center; outline: none;
             color: var(--text-dark);
-            -webkit-appearance: none; /* ลบสไตล์เบราว์เซอร์บน iOS */
+            -webkit-appearance: none;
         }
 
-        /* Buttons Row */
+        /* 🟢 เพิ่มปุ่มส่งคำตอบสีเขียวมินต์พาสเทลสำหรับกดบนจอสัมผัส */
+        .btn-submit-ans {
+            background-color: #66bb6a;
+            color: white;
+            border: none;
+            padding: 8px 24px;
+            font-size: 1.1rem;
+            border-radius: 12px;
+            cursor: pointer;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            font-weight: 500;
+            width: 85%;
+            max-width: 260px;
+            -webkit-tap-highlight-color: transparent;
+        }
+        .btn-submit-ans:active { transform: scale(0.98); }
+
         .btn-group-row { display: flex; gap: 14px; width: 100%; }
         .btn {
             flex: 1; padding: 14px; border: none; border-radius: 18px;
@@ -191,7 +211,6 @@
         .btn-stop { background-color: var(--stop-btn); }
         .btn:disabled { opacity: 0.5; cursor: not-allowed; }
 
-        /* --- ฝั่งขวา: ประวัติ --- */
         .panel-title-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; }
         .history-title { font-size: 1.3rem; color: var(--text-dark); font-weight: 500; }
         .btn-clear {
@@ -216,7 +235,6 @@
         .history-item.wrong { color: var(--stop-btn); }
         .round-summary-item { background: #ffe5ec; color: #d9406b; padding: 8px 12px; font-weight: bold; border-radius: 10px; display: flex; justify-content: space-between; }
 
-        /* --- ⚙️ พาเนลตั้งค่าด้านล่าง --- */
         .settings-panel {
             background: var(--panel-bg); backdrop-filter: blur(10px);
             -webkit-backdrop-filter: blur(10px); border-radius: 24px;
@@ -255,30 +273,24 @@
         .history-list::-webkit-scrollbar { width: 6px; }
         .history-list::-webkit-scrollbar-thumb { background: #ffccd5; border-radius: 10px; }
 
-        /* =======================================================
-           📱 Responsive Styles (รองรับมือถือ และ iPad / Tablet)
-           ======================================================= */
-        
-        /* 📐 สำหรับ iPad และ Tablet (จอขนาดกลางกว้างไม่เกิน 991px) */
         @media (max-width: 991px) {
             .app-container { max-width: 720px; }
             .math-question { font-size: 3.2rem; }
         }
 
-        /* 📱 สำหรับโทรศัพท์มือถือทุกรุ่น (จอเล็กกว้างไม่เกิน 767px) */
         @media (max-width: 767px) {
             body { align-items: flex-start; padding: 10px; }
             body::before { background-size: 100px, 120px; opacity: 0.15; }
             
             .main-panels {
-                flex-direction: column; /* เปลี่ยนจากซ้าย-ขวา เป็นบน-ล่าง */
+                flex-direction: column;
                 gap: 16px;
                 min-height: auto;
             }
             
             .game-header { font-size: 1.5rem; margin-bottom: 10px; }
             .panel { padding: 16px; border-radius: 24px; }
-            .screen-box { min-height: 220px; padding: 15px; margin-bottom: 12px; }
+            .screen-box { min-height: 240px; padding: 15px; margin-bottom: 12px; }
             
             .bear-container { width: 90px; height: 90px; }
             .math-question { font-size: 2.6rem; }
@@ -289,7 +301,7 @@
             .score-display { left: 15px; }
 
             .settings-panel {
-                flex-direction: column; /* ปรับแผงตั้งค่าด้านล่างเป็นแนวตั้ง */
+                flex-direction: column;
                 gap: 16px;
                 padding: 16px;
             }
@@ -321,7 +333,10 @@
 
                     <div id="playingScreen" style="display: none; width: 100%;">
                         <div class="math-question" id="questionText">0 + 0</div>
-                        <input type="number" pattern="[0-9]*" inputmode="numeric" class="input-answer" id="answerInput" placeholder="พิมพ์คำตอบแล้วกด Enter">
+                        <div class="answer-zone">
+                            <input type="number" pattern="[0-9]*" inputmode="numeric" class="input-answer" id="answerInput" placeholder="พิมพ์คำตอบที่นี่">
+                            <button class="btn-submit-ans" id="btnSubmitAns" onclick="submitAnswer()">ส่งคำตอบ (Enter) ⚡</button>
+                        </div>
                     </div>
 
                     <div class="summary-overlay" id="summaryScreen" style="display: none;">
@@ -382,7 +397,7 @@
         </div>
 
         <div class="tip-box">
-            💡 <b>Tip:</b> ตอบให้ถูกต้องและรวดเร็วเพื่อทำคะแนนให้สูงขึ้น! ✨
+            💡 <b>Tip:</b> บนมือถือสามารถกดปุ่ม "ส่งคำตอบ ⚡" หรือกดปุ่ม Go/Enter บนคีย์บอร์ดเพื่อส่งคำตอบได้ทันที!
         </div>
 
     </div>
@@ -457,7 +472,7 @@
             playingScreen.style.display = 'block';
 
             answerInput.value = ''; 
-            setTimeout(() => { answerInput.focus(); }, 100); // ดีเลย์นิดหน่อยเพื่อให้คีย์บอร์ดมือถือเด้งสมูท
+            setTimeout(() => { answerInput.focus(); }, 120); 
             generateQuestion();
             
             clearInterval(timer);
@@ -531,21 +546,30 @@
             questionText.innerText = `${num1} ${op} ${num2}`;
         }
 
+        // ฟังก์ชันหลักที่ใช้ตรวจคำตอบ (เรียกใช้ทั้งตอนกดปุ่มในจอ หรือ กดปุ่มบนคีย์บอร์ด)
+        function submitAnswer() {
+            const userAnswer = parseInt(answerInput.value);
+            if (isNaN(userAnswer)) return;
+            const questionContext = questionText.innerText;
+            if (userAnswer === currentAnswer) {
+                score += (currentDifficulty === 'easy') ? 10 : (currentDifficulty === 'medium' ? 20 : 40);
+                correctCount++;
+                addHistoryItem(questionContext, userAnswer, true);
+                triggerScorePopEffect();
+            } else {
+                wrongCount++;
+                addHistoryItem(questionContext, userAnswer, false);
+            }
+            updateScoreDisplay(); 
+            answerInput.value = ''; 
+            generateQuestion();
+            answerInput.focus(); // บังคับให้โฟกัสที่กล่องพิมพ์ต่อ ไม่ให้คีย์บอร์ดปิดลงมา
+        }
+
+        // ตรวจจับการกดปุ่มบนคีย์บอร์ดจริง
         answerInput.addEventListener('keydown', (e) => {
             if (e.key === 'Enter') {
-                const userAnswer = parseInt(answerInput.value);
-                if (isNaN(userAnswer)) return;
-                const questionContext = questionText.innerText;
-                if (userAnswer === currentAnswer) {
-                    score += (currentDifficulty === 'easy') ? 10 : (currentDifficulty === 'medium' ? 20 : 40);
-                    correctCount++;
-                    addHistoryItem(questionContext, userAnswer, true);
-                    triggerScorePopEffect();
-                } else {
-                    wrongCount++;
-                    addHistoryItem(questionContext, userAnswer, false);
-                }
-                updateScoreDisplay(); answerInput.value = ''; generateQuestion();
+                submitAnswer();
             }
         });
 
