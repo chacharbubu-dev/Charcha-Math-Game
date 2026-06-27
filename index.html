@@ -32,8 +32,10 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            overflow: hidden;
+            overflow-x: hidden;
+            overflow-y: auto;
             position: relative;
+            padding: 15px;
         }
 
         /* --- ตกแต่งฉากหลัง (ก้อนเมฆ ดอกซากุระ กระต่าย) --- */
@@ -48,7 +50,7 @@
             background-repeat: no-repeat;
             background-position: left bottom 20px, left top 20px;
             background-size: 150px, 200px;
-            opacity: 0.35;
+            opacity: 0.25;
             pointer-events: none;
             z-index: 0;
         }
@@ -77,16 +79,16 @@
             display: flex;
             flex-direction: column;
             gap: 16px;
-            width: 95%;
+            width: 100%;
             max-width: 1000px;
             z-index: 2;
+            margin: auto;
         }
 
         .main-panels {
             display: flex;
             gap: 20px;
-            height: 55vh;
-            min-height: 420px;
+            min-height: 450px;
         }
 
         .panel {
@@ -102,7 +104,7 @@
         }
 
         .left-panel { flex: 1.3; align-items: center; position: relative; }
-        .right-panel { flex: 1; }
+        .right-panel { flex: 1; min-height: 250px; }
 
         .game-header {
             text-align: center;
@@ -115,6 +117,7 @@
         .screen-box {
             width: 100%;
             flex: 1;
+            min-height: 260px;
             border-radius: 24px;
             background: var(--inner-bg);
             border: 2px solid var(--border-color);
@@ -130,8 +133,8 @@
 
         /* 🐻 อนิเมชันน้องหมี */
         .bear-container {
-            width: 130px;
-            height: 130px;
+            width: 110px;
+            height: 110px;
             background: url('https://img.icons8.com/sticker/100/teddy-bear.png') no-repeat center;
             background-size: contain;
             animation: bearBounce 3s ease-in-out infinite;
@@ -146,39 +149,43 @@
         .timer-display {
             position: absolute;
             top: 15px; right: 20px;
-            font-size: 1.3rem; color: var(--text-dark); font-weight: 500;
+            font-size: 1.2rem; color: var(--text-dark); font-weight: 500;
         }
 
         .score-display {
             position: absolute;
             top: 15px; left: 20px;
-            font-size: 1.3rem; color: var(--text-pink); font-weight: bold;
+            font-size: 1.2rem; color: var(--text-pink); font-weight: bold;
             transition: transform 0.15s;
         }
 
         .score-pop { transform: scale(1.3); }
 
         .math-question {
-            font-size: 3.8rem;
+            font-size: 3.5rem;
             font-weight: 600;
             color: var(--text-dark);
             margin-bottom: 15px;
+            word-break: break-all;
         }
 
         .input-answer {
-            width: 80%; max-width: 260px; padding: 12px;
-            font-size: 1.6rem; border: 2px solid var(--border-color);
+            width: 85%; max-width: 260px; padding: 12px;
+            font-size: 1.5rem; border: 2px solid var(--border-color);
             border-radius: 16px; text-align: center; outline: none;
             color: var(--text-dark);
+            -webkit-appearance: none; /* ลบสไตล์เบราว์เซอร์บน iOS */
         }
 
         /* Buttons Row */
         .btn-group-row { display: flex; gap: 14px; width: 100%; }
         .btn {
             flex: 1; padding: 14px; border: none; border-radius: 18px;
-            color: white; font-size: 1.2rem; cursor: pointer;
+            color: white; font-size: 1.1rem; cursor: pointer;
             display: flex; justify-content: center; align-items: center; gap: 8px;
             box-shadow: 0 6px 15px rgba(0,0,0,0.1); font-weight: 500;
+            user-select: none;
+            -webkit-tap-highlight-color: transparent;
         }
         .btn-start { background-color: var(--accent-btn); }
         .btn-stop { background-color: var(--stop-btn); }
@@ -201,6 +208,7 @@
             flex: 1; overflow-y: auto; border: 1px solid var(--border-color);
             padding: 10px; border-radius: 16px; background: var(--inner-bg);
             display: flex; flex-direction: column; gap: 6px;
+            min-height: 150px;
         }
         .no-history { margin: auto; text-align: center; color: var(--text-pink); opacity: 0.7; }
         .history-item { padding: 8px 12px; border-bottom: 1px solid rgba(0,0,0,0.05); display: flex; justify-content: space-between; }
@@ -212,17 +220,18 @@
         .settings-panel {
             background: var(--panel-bg); backdrop-filter: blur(10px);
             -webkit-backdrop-filter: blur(10px); border-radius: 24px;
-            padding: 16px 24px; border: 4px solid #ffffff;
-            display: flex; justify-content: center; align-items: center; gap: 60px;
+            padding: 20px; border: 4px solid #ffffff;
+            display: flex; justify-content: center; align-items: center; gap: 40px;
             box-shadow: 0 8px 30px rgba(255, 143, 163, 0.15);
         }
-        .setting-group { display: flex; flex-direction: column; align-items: center; gap: 8px; }
-        .setting-label { font-size: 1rem; color: var(--text-pink); font-weight: 500; }
-        .selector-options { display: flex; gap: 10px; }
+        .setting-group { display: flex; flex-direction: column; align-items: center; gap: 8px; flex: 1; }
+        .setting-label { font-size: 1rem; color: var(--text-pink); font-weight: 500; text-align: center; }
+        .selector-options { display: flex; gap: 8px; flex-wrap: wrap; justify-content: center; }
         .opt-btn {
-            border: none; padding: 8px 20px; border-radius: 12px; cursor: pointer;
-            font-size: 1rem; background: #ffffff; color: var(--text-dark);
+            border: none; padding: 8px 16px; border-radius: 12px; cursor: pointer;
+            font-size: 0.95rem; background: #ffffff; color: var(--text-dark);
             transition: all 0.2s; box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+            -webkit-tap-highlight-color: transparent;
         }
         
         .opt-btn.active[data-diff="easy"] { background-color: #52b788; color: white; }
@@ -231,19 +240,64 @@
         .opt-btn.active[data-time] { background-color: var(--stop-btn); color: white; }
 
         .tip-box {
-            text-align: center; font-size: 0.9rem; color: #6c757d;
-            background: rgba(255,255,255,0.5); padding: 6px; border-radius: 12px;
-            margin-top: -4px; width: 100%;
+            text-align: center; font-size: 0.85rem; color: #6c757d;
+            background: rgba(255,255,255,0.5); padding: 8px; border-radius: 12px;
+            width: 100%;
         }
 
         .summary-overlay {
             position: absolute; top: 0; left: 0; width: 100%; height: 100%;
             background: rgba(255, 255, 255, 0.95); border-radius: 24px;
             display: flex; flex-direction: column; justify-content: center; align-items: center; z-index: 10;
+            padding: 15px;
         }
 
         .history-list::-webkit-scrollbar { width: 6px; }
         .history-list::-webkit-scrollbar-thumb { background: #ffccd5; border-radius: 10px; }
+
+        /* =======================================================
+           📱 Responsive Styles (รองรับมือถือ และ iPad / Tablet)
+           ======================================================= */
+        
+        /* 📐 สำหรับ iPad และ Tablet (จอขนาดกลางกว้างไม่เกิน 991px) */
+        @media (max-width: 991px) {
+            .app-container { max-width: 720px; }
+            .math-question { font-size: 3.2rem; }
+        }
+
+        /* 📱 สำหรับโทรศัพท์มือถือทุกรุ่น (จอเล็กกว้างไม่เกิน 767px) */
+        @media (max-width: 767px) {
+            body { align-items: flex-start; padding: 10px; }
+            body::before { background-size: 100px, 120px; opacity: 0.15; }
+            
+            .main-panels {
+                flex-direction: column; /* เปลี่ยนจากซ้าย-ขวา เป็นบน-ล่าง */
+                gap: 16px;
+                min-height: auto;
+            }
+            
+            .game-header { font-size: 1.5rem; margin-bottom: 10px; }
+            .panel { padding: 16px; border-radius: 24px; }
+            .screen-box { min-height: 220px; padding: 15px; margin-bottom: 12px; }
+            
+            .bear-container { width: 90px; height: 90px; }
+            .math-question { font-size: 2.6rem; }
+            .input-answer { font-size: 1.3rem; padding: 10px; }
+            
+            .timer-display, .score-display { font-size: 1.1rem; top: 12px; }
+            .timer-display { right: 15px; }
+            .score-display { left: 15px; }
+
+            .settings-panel {
+                flex-direction: column; /* ปรับแผงตั้งค่าด้านล่างเป็นแนวตั้ง */
+                gap: 16px;
+                padding: 16px;
+            }
+            .setting-group { width: 100%; }
+            .opt-btn { padding: 8px 12px; font-size: 0.85rem; }
+            
+            .btn { font-size: 1rem; padding: 12px; border-radius: 14px; }
+        }
     </style>
 </head>
 <body>
@@ -262,20 +316,20 @@
 
                     <div id="idleScreen">
                         <div class="bear-container"></div>
-                        <p style="color: var(--text-pink);">กดปุ่มเริ่มเกมด้านล่างเพื่อเริ่มท้าทายฝีมือ!</p>
+                        <p style="color: var(--text-pink); font-size: 0.95rem; padding: 0 10px;">กดปุ่มเริ่มเกมด้านล่างเพื่อเริ่มท้าทายฝีมือ!</p>
                     </div>
 
                     <div id="playingScreen" style="display: none; width: 100%;">
                         <div class="math-question" id="questionText">0 + 0</div>
-                        <input type="number" class="input-answer" id="answerInput" placeholder="พิมพ์คำตอบแล้วกด Enter">
+                        <input type="number" pattern="[0-9]*" inputmode="numeric" class="input-answer" id="answerInput" placeholder="พิมพ์คำตอบแล้วกด Enter">
                     </div>
 
                     <div class="summary-overlay" id="summaryScreen" style="display: none;">
-                        <h3 class="game-header" style="font-size: 2rem;">🎉 จบเกมแล้ว! 🎉</h3>
-                        <div id="summaryDetails" style="margin-bottom: 20px; line-height: 1.8; color: var(--text-dark);">
+                        <h3 class="game-header" style="font-size: 1.8rem; margin-bottom: 8px;">🎉 จบเกมแล้ว! 🎉</h3>
+                        <div id="summaryDetails" style="margin-bottom: 16px; line-height: 1.6; color: var(--text-dark); font-size: 0.95rem;">
                             คะแนนที่ได้: 0 คะแนน
                         </div>
-                        <button class="btn btn-start" style="flex: none; width: 180px; padding: 10px;" onclick="startGame()">🔄 เล่นอีกครั้ง</button>
+                        <button class="btn btn-start" style="flex: none; width: 160px; padding: 10px; font-size: 1rem;" onclick="startGame()">🔄 เล่นอีกครั้ง</button>
                     </div>
                 </div>
 
@@ -288,7 +342,7 @@
             <div class="panel right-panel">
                 <div class="panel-title-row">
                     <h3 class="history-title">📸 Round History</h3>
-                    <button class="btn-clear" onclick="clearHistory()">ล้างประวัติทั้งหมด</button>
+                    <button class="btn-clear" onclick="clearHistory()">ล้างประวัติ</button>
                 </div>
 
                 <div class="highscore-box">
@@ -298,8 +352,8 @@
 
                 <div class="history-list" id="historyList">
                     <div class="no-history" id="noHistory">
-                        <img src="https://img.icons8.com/pastel-glyph/64/d9406b/clipboard.png" style="opacity: 0.5; margin-bottom: 10px;"><br>
-                        ยังไม่มีประวัติการเล่น<br><span style="font-size: 0.85rem;">เริ่มเกมเพื่อสร้างประวัติของคุณ!</span>
+                        <img src="https://img.icons8.com/pastel-glyph/64/d9406b/clipboard.png" style="width: 48px; height: 48px; opacity: 0.5; margin-bottom: 6px;"><br>
+                        ยังไม่มีประวัติการเล่น<br><span style="font-size: 0.8rem;">เริ่มเกมเพื่อสร้างประวัติของคุณ!</span>
                     </div>
                 </div>
             </div>
@@ -402,7 +456,8 @@
             idleScreen.style.display = 'none'; summaryScreen.style.display = 'none';
             playingScreen.style.display = 'block';
 
-            answerInput.value = ''; answerInput.focus();
+            answerInput.value = ''; 
+            setTimeout(() => { answerInput.focus(); }, 100); // ดีเลย์นิดหน่อยเพื่อให้คีย์บอร์ดมือถือเด้งสมูท
             generateQuestion();
             
             clearInterval(timer);
@@ -422,7 +477,7 @@
             playingScreen.style.display = 'none';
             toggleSettingsInput(false);
 
-            summaryDetails.innerHTML = `คะแนนที่ทำได้: <b>${score}</b> คะแนน<br>ถูก: ${correctCount} | ผิด: ${wrongCount} (ระดับ: ${currentDifficulty})`;
+            summaryDetails.innerHTML = `คะแนนที่ทำได้: <b>${score}</b> คะแนน<br>ถูก: ${correctCount} | ผิด: ${wrongCount}<br>(ระดับ: ${currentDifficulty === 'easy' ? 'ง่าย' : currentDifficulty === 'medium' ? 'กลาง' : 'ยาก'})`;
             summaryScreen.style.display = 'flex';
 
             addRoundSummaryToHistory(roundCounter, score, correctCount, wrongCount);
@@ -531,16 +586,16 @@
         }
 
         function generateInitialPetals() {
-            createPetals(8);
-            setInterval(() => { if(document.querySelectorAll('.petal').length < 15) createPetals(2); }, 4000);
+            createPetals(6);
+            setInterval(() => { if(document.querySelectorAll('.petal').length < 12) createPetals(1); }, 5000);
         }
 
         function createPetals(count) {
             for (let i = 0; i < count; i++) {
                 const petal = document.createElement('div');
                 petal.innerText = '🌸'; petal.className = 'petal';
-                petal.style.left = Math.random() * 100 + 'vw';
-                petal.style.fontSize = Math.random() * 10 + 10 + 'px';
+                petal.style.left = Math.random() * 95 + 'vw';
+                petal.style.fontSize = Math.random() * 8 + 10 + 'px';
                 petal.style.animationDuration = Math.random() * 5 + 5 + 's'; 
                 effectContainer.appendChild(petal);
                 petal.addEventListener('animationend', () => petal.remove());
